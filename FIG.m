@@ -11,10 +11,11 @@ properties
     fig                     % Figure object;
     fig_nbr         = 101;
     clear_figure    = true;
-    fig_width       = 1;    % Normalized complete figure width
-    fig_height      = 1;    % Normalized complete figure height
-    plot_width              % Normalized width of plottable area
-    plot_height             % Normalized height of plottable area
+    fig_width                       % Figure width
+    fig_height                      % Figure height
+    units           = 'centimeters' % Units of the figure dimensions
+    plot_width                      % Normalized width of plottable area
+    plot_height                     % Normalized height of plottable area
 
     % External margins
     margins_left
@@ -34,7 +35,7 @@ end
 
 methods
     % ----- Constructor ---------------------------------------------------
-    function obj = plotobj(fig_nbr,axes_grid,varargin,opt)
+    function obj = FIG(fig_nbr,axes_grid,varargin,opt)
         arguments
             fig_nbr
             axes_grid
@@ -43,6 +44,7 @@ methods
             varargin
         end
         arguments
+            opt.figure_width    = '1col'
             opt.left_margin     (1,1) {mustBeNumeric} = [.05]
             opt.bottom_margin   (1,1) {mustBeNumeric} = [.05]
             opt.right_margin    (1,1) {mustBeNumeric} = [.05]
@@ -51,8 +53,33 @@ methods
             opt.gap_col = 0.05
         end
 
-        % Define figure number
+        % Create and format figure
         obj.fig_nbr = fig_nbr;
+        obj.fig = figure(obj.fig_nbr); if obj.clear_figure, clf(obj.fig_nbr), end
+
+        % --- Set default interpreter to latex
+        set(obj.fig, 'defaultAxesTickLabelInterpreter','latex'); 
+        set(obj.fig, 'defaultLegendInterpreter','latex'); 
+        set(obj.fig, 'defaultTextInterpreter','latex');
+        set(obj.fig, 'defaultfigurecolor',[1 1 1])
+        
+        % --- Change figure width and height
+        fcfg.width_pt = 487.8225;   % Width of the figure in LaTeX points
+        fcfg.pt2cm = 0.03514;       % LaTeX points to centimeter conversion
+        fcfg.width_cm = fcfg.width_pt*fcfg.pt2cm;
+        fcfg.height_cm = fcfg.width_cm;
+
+        switch opt.figure_width
+            case '1col'
+                obj.fig_width  = fcfg.width_cm;
+                obj.fig_height = fcfg.height_cm;
+                obj.position
+            case '2col'
+                obj.fig_width  = fcfg.width_cm/2;
+                obj.fig_height = fcfg.height_cm/2;
+                obj.position
+        end
+
 
         % Define axes grid
         obj.N_row = axes_grid(1);
@@ -65,8 +92,8 @@ methods
         obj.margins_top     = opt.top_margin;
 
         % Define plottable area
-        obj.plot_width  = obj.fig_width  - obj.margins_left - obj.margins_right;  %Normalized width of plottable area
-        obj.plot_height = obj.fig_height - obj.margins_top  - obj.margins_bottom; %Normalized height of plottable area
+        obj.plot_width  = 1  - obj.margins_left - obj.margins_right;  %Normalized width of plottable area
+        obj.plot_height = 1 - obj.margins_top  - obj.margins_bottom; %Normalized height of plottable area
         
         % Define gap between rows
         switch numel(opt.gap_row)
@@ -87,10 +114,7 @@ methods
         % Calculate axes height & width
         ax_width    = (obj.plot_width  - sum(obj.gap_col))/obj.N_col;
         ax_height   = (obj.plot_height - sum(obj.gap_row))/obj.N_row;
-
-        % Create figure
-        obj.fig = figure(obj.fig_nbr); if obj.clear_figure, clf(obj.fig_nbr), end
-        
+                
         % Build full grid if no grid has been specified
         if numel(varargin) == 0 % Build full grid
             varargin = num2cell(1:obj.N_row*obj.N_col);
@@ -122,7 +146,18 @@ methods
         end
         obj.ax = ax;       
     end
-    
+    % ----- Positioner ----------------------------------------------------
+    function position(obj,opt)
+        arguments
+            obj
+            opt.x (1,1) {mustBeNumeric} = 1
+            opt.y (1,1) {mustBeNumeric} = 10
+            opt.units = 'centimeters'
+        end
+        set(obj.fig,'Position',[opt.x,opt.y,obj.fig_width,obj.fig_height],'Units',opt.units)
+        set(obj.fig,'Position',[opt.x,opt.y,obj.fig_width,obj.fig_height],'Units',opt.units) % Do twice to avoid MATLAB bug
+    end
+
     % ----- Exporter ------------------------------------------------------
     function export(obj)
 
