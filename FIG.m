@@ -17,6 +17,9 @@ properties
     plot_width                      % Normalized width of plottable area
     plot_height                     % Normalized height of plottable area
 
+    % Metadata
+    name
+
     % External margins
     margins_left
     margins_bottom
@@ -63,7 +66,7 @@ methods
         set(obj.fig, 'defaultAxesTickLabelInterpreter','latex'); 
         set(obj.fig, 'defaultLegendInterpreter','latex'); 
         set(obj.fig, 'defaultTextInterpreter','latex');
-        set(obj.fig, 'defaultfigurecolor',[1 1 1])
+        set(obj.fig, 'color',[1 1 1])
         
         % --- Change figure width and height
         fcfg.width_pt = 487.8225;   % Width of the figure in LaTeX points
@@ -144,7 +147,8 @@ methods
 
             % Create axes
             ax(i) = axes('Position',[pax_left,pax_bottom,pax_width,pax_height],...
-                           'NextPlot','add','Box','on','XGrid','on','YGrid','on');
+                           'NextPlot','add','Box','on','XGrid','on','YGrid','on',...
+                           'XMinorGrid','on','YMinorGrid','on');
         end
         obj.ax = ax;       
     end
@@ -172,8 +176,15 @@ methods
     end
 
     % ----- Exporter ------------------------------------------------------
-    function export(obj)
-
+    function export(obj,opt)
+        arguments
+            obj
+            opt.figname
+            opt.savepath
+            opt.savetype = 'pdf'
+        end
+        full_fig_path = [opt.savepath filesep opt.figname '.' opt.savetype];
+        exportgraphics(obj.fig,char(join(full_fig_path,'')))        
     end
 
     % ----- Add identifier ------------------------------------------------
@@ -199,7 +210,9 @@ methods
         end
 
         % Create grid of position
-        identifier_position = repmat(identifier_position,Nax,1);
+        if size(identifier_position,1) ~= Nax
+            identifier_position = repmat(identifier_position,Nax,1);
+        end
 
         % Update certain positions if required
         for i = 1:size(opt.position_change,1)
