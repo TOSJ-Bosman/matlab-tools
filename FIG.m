@@ -45,6 +45,8 @@ methods
         end
         arguments
             opt.figure_width    = '1col'
+            opt.xpos_display    = 1  % [cm] X position where the figure is displayed on the screen
+            opt.ypos_display    = 10 % [cm] Y position where the figure is displayed on the screen 
             opt.left_margin     (1,1) {mustBeNumeric} = [.05]
             opt.bottom_margin   (1,1) {mustBeNumeric} = [.05]
             opt.right_margin    (1,1) {mustBeNumeric} = [.05]
@@ -73,12 +75,12 @@ methods
             case '1col'
                 obj.fig_width  = fcfg.width_cm;
                 obj.fig_height = fcfg.height_cm;
-                obj.position
+                
             case '2col'
                 obj.fig_width  = fcfg.width_cm/2;
                 obj.fig_height = fcfg.height_cm/2;
-                obj.position
         end
+        obj.position("x",opt.xpos_display,y=opt.ypos_display)
 
 
         % Define axes grid
@@ -146,6 +148,7 @@ methods
         end
         obj.ax = ax;       
     end
+
     % ----- Positioner ----------------------------------------------------
     function position(obj,opt)
         arguments
@@ -156,6 +159,16 @@ methods
         end
         set(obj.fig,'Position',[opt.x,opt.y,obj.fig_width,obj.fig_height],'Units',opt.units)
         set(obj.fig,'Position',[opt.x,opt.y,obj.fig_width,obj.fig_height],'Units',opt.units) % Do twice to avoid MATLAB bug
+    end
+
+    % ----- XTick remover -------------------------------------------------
+    function xtick_off(obj,iax)
+        set(obj.ax(iax),'XTickLabel','')
+    end
+
+    % ----- YTick remover -------------------------------------------------
+    function ytick_off(obj,iax)
+        set(obj.ax(iax),'YTickLabel','')
     end
 
     % ----- Exporter ------------------------------------------------------
