@@ -1,4 +1,4 @@
-classdef plotobj
+classdef FIG
 % Explanation goes here
 % 
 
