@@ -48,6 +48,7 @@ methods
         end
         arguments
             opt.figure_width    = '1col'
+            opt.figure_wh_ratio = 0.5;
             opt.xpos_display    = 1  % [cm] X position where the figure is displayed on the screen
             opt.ypos_display    = 10 % [cm] Y position where the figure is displayed on the screen 
             opt.left_margin     (1,1) {mustBeNumeric} = [.05]
@@ -77,11 +78,11 @@ methods
         switch opt.figure_width
             case '1col'
                 obj.fig_width  = fcfg.width_cm;
-                obj.fig_height = fcfg.height_cm;
+                obj.fig_height = fcfg.height_cm*opt.figure_wh_ratio;
                 
             case '2col'
                 obj.fig_width  = fcfg.width_cm/2;
-                obj.fig_height = fcfg.height_cm/2;
+                obj.fig_height = fcfg.height_cm*opt.figure_wh_ratio;
         end
         obj.position("x",opt.xpos_display,y=opt.ypos_display)
 
