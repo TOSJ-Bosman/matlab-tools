@@ -228,6 +228,26 @@ methods
                     ['(' alphabet(i) ')'],'Units','normalized');
         end
     end
+
+    % ----- Xlabel position changer ---------------------------------------
+    function xlabel_height_scaling(obj,opt)
+        % Scale the position of the xlabel
+        arguments
+            obj
+            opt.iax
+            opt.direction
+            opt.scaling
+        end
+        for i=opt.iax
+            P = obj.ax(i).XLabel.Position;
+            for ii = 1:length(opt.direction)
+                ipos = opt.direction(ii);
+                P(ipos) = opt.scaling(ii)*P(ipos);
+                set(obj.ax(i).XLabel,'Position',P)
+            end
+        end
+    end
+
 end
 
 end
