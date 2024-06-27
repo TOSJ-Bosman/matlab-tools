@@ -105,6 +105,7 @@ methods
         switch numel(opt.gap_row)
             case 1
                 obj.gap_row = repmat(opt.gap_row,1,max(1,obj.N_row-1));
+                obj.gap_row = repmat(opt.gap_row,1,obj.N_row-1);
             case obj.N_row-1
                 obj.gap_row = opt.gap_row;
         end
@@ -113,6 +114,7 @@ methods
         switch numel(opt.gap_col)
             case 1
                 obj.gap_col = repmat(opt.gap_col,1,max(1,obj.N_col-1));
+                obj.gap_col = repmat(opt.gap_col,1,obj.N_col-1);
             case obj.N_col-1
                 obj.gap_col = opt.gap_col;
         end

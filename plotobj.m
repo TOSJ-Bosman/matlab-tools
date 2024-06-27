@@ -30,7 +30,7 @@ classdef plotobj
     
     methods
         function obj = plotobj(varargin)
-            fprintf('plotobj has been replaced by FIG. Consider using newer version of code.')
+            fprintf('plotobj has been replaced by FIG. Consider using newer version of code.\n')
             % Define plotobj as obj = plotobj(fignumber,[Nrow,Ncol],varargin)
             obj.fig_nbr = varargin{1};
             ii=2;
