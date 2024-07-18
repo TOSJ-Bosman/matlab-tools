@@ -6,6 +6,7 @@ classdef FIG
 % Author: Thomas Bosman 
 % Date:   Nov - 2020 (created)
 %         May - 2024 (re-factored)
+
 properties
     % Figure properties
     fig                     % Figure object;
@@ -83,6 +84,13 @@ methods
             case '2col'
                 obj.fig_width  = fcfg.width_cm/2;
                 obj.fig_height = fcfg.height_cm*opt.figure_wh_ratio;
+            
+            case 'b5'
+                fcfg.width_pt = 355.65945;   % Textwidth of a b5 thesis
+                fcfg.width_cm = fcfg.width_pt*fcfg.pt2cm;
+                fcfg.height_cm = fcfg.width_cm;
+                obj.fig_width  = fcfg.width_cm;
+                obj.fig_height = fcfg.height_cm*opt.figure_wh_ratio;   
         end
         obj.position("x",opt.xpos_display,y=opt.ypos_display)
 
