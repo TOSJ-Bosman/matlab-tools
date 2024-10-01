@@ -187,15 +187,20 @@ methods
     end
 
     % ----- Exporter ------------------------------------------------------
-    function export(obj,opt)
+    function export(obj,varargin,opt)
         arguments
             obj
+        end
+        arguments (Repeating)
+            varargin
+        end
+        arguments
             opt.figname
             opt.savepath
             opt.savetype = 'pdf'
         end
         full_fig_path = [opt.savepath filesep opt.figname '.' opt.savetype];
-        exportgraphics(obj.fig,char(join(full_fig_path,'')))        
+        exportgraphics(obj.fig,char(join(full_fig_path,'')),varargin{:})        
     end
 
     % ----- Add identifier ------------------------------------------------
@@ -236,7 +241,27 @@ methods
                     ['(' alphabet(i) ')'],'Units','normalized');
         end
     end
+    
+    % ----- X-axes labeler ------------------------------------------------
+    function xlabel(obj,iax,label,opt)
+        % Add X label to figure and change position if needed
+        arguments
+            obj
+            iax
+            label
+            opt.iax
+            opt.direction {mustBeMember(opt.direction,['x','y'])}
+            opt.scaling
+        end
 
+        % Add X label to desired axis
+        try
+            cellfun(@(x) set(x,'String',label),get(obj.ax(iax),'XLabel'))
+        catch
+            xlabel(obj.ax(iax),label)
+        end
+
+    end
     % ----- Xlabel position changer ---------------------------------------
     function xlabel_height_scaling(obj,opt)
         % Scale the position of the xlabel
