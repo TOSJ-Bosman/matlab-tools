@@ -90,7 +90,13 @@ methods
                 fcfg.width_cm = fcfg.width_pt*fcfg.pt2cm;
                 fcfg.height_cm = fcfg.width_cm;
                 obj.fig_width  = fcfg.width_cm;
-                obj.fig_height = fcfg.height_cm*opt.figure_wh_ratio;   
+                obj.fig_height = fcfg.height_cm*opt.figure_wh_ratio;
+            case 'b5-2col'
+                fcfg.width_pt = 355.65945;   % Textwidth of a b5 thesis
+                fcfg.width_cm = fcfg.width_pt*fcfg.pt2cm/2;
+                fcfg.height_cm = fcfg.width_cm;
+                obj.fig_width  = fcfg.width_cm;
+                obj.fig_height = fcfg.height_cm*opt.figure_wh_ratio;
         end
         obj.position("x",opt.xpos_display,y=opt.ypos_display)
 
@@ -187,15 +193,21 @@ methods
     end
 
     % ----- Exporter ------------------------------------------------------
-    function export(obj,opt)
+    function export(obj,varargin,opt)
         arguments
             obj
+        end
+        arguments (Repeating)
+            varargin
+        end
+        arguments
             opt.figname
             opt.savepath
             opt.savetype = 'pdf'
         end
+
         full_fig_path = [opt.savepath filesep opt.figname '.' opt.savetype];
-        exportgraphics(obj.fig,char(join(full_fig_path,'')))        
+        exportgraphics(obj.fig,char(join(full_fig_path,'')),varargin{:})        
     end
 
     % ----- Add identifier ------------------------------------------------
