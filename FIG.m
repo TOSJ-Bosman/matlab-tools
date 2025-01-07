@@ -159,8 +159,8 @@ methods
             % Calculate axes position
             pax_left    = obj.margins_left+(rem(iax_min-1,obj.N_col))*(ax_width)+sum(obj.gap_col([1:min(i_cols)]));
             pax_bottom  = 1-obj.margins_top-ax_height-(floor(abs(iax_max-1)/obj.N_col))*(ax_height)-sum(obj.gap_row([1:i_rows(end)]));
-            pax_width   = n_cols*ax_width +sum(obj.gap_col([i_cols(1)+1:n_cols-1]));
-            pax_height  = n_rows*ax_height+sum(obj.gap_row([i_rows(1)+1:n_rows-1]));
+            pax_width   = n_cols*ax_width +sum(obj.gap_col([i_cols(1)+1:i_cols(1)+n_cols-1]));
+            pax_height  = n_rows*ax_height+sum(obj.gap_row([i_rows(1)+1:i_rows(1)+n_rows-1]));
 
             % Create axes
             ax(i) = axes('Position',[pax_left,pax_bottom,pax_width,pax_height],...
